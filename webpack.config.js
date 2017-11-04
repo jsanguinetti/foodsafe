@@ -10,7 +10,7 @@ const input = {
 };
 const compiledContract = solc.compile({sources: input}, 1);
 const abi = compiledContract.contracts['FoodSafe.sol:FoodSafe'].interface;
-const foodSafeCode = '0x'+compiledContract.contracts['FoodSafe.sol:FoodSafe'].bytecode;
+const foodSafeCode = '0x' + compiledContract.contracts['FoodSafe.sol:FoodSafe'].bytecode;
 
 
 
@@ -27,7 +27,7 @@ module.exports = {
     ]),
     new webpack.DefinePlugin({
       'process.env': {
-        'FOODSAFE_CODE': foodSafeCode,
+        'FOODSAFE_CODE': JSON.stringify(foodSafeCode),
         'FOODSAFE_ABI': JSON.stringify(abi)
       }
     })
