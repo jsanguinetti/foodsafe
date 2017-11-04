@@ -38,7 +38,7 @@ window.App = {
       foodSafeContract = web3.eth.contract(foodSafeABI);
     });
   },
-  createContract: async function() {
+  createContract: async () => {
     const pWeb3 = new PromisifiedWeb3(web3);
     const cWrapper = new ContractWrapper(foodSafeContract);
     const txHelper = new TxHelper(web3);
