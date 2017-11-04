@@ -1,0 +1,27 @@
+env:
+  browser: true
+  node: true
+extends: 'eslint:recommended'
+parserOptions:
+  sourceType: module
+  ecmaVersion: 8
+globals:
+  artifacts: true
+  console: true
+  Promise: true
+  App: true
+  web3: true
+rules:
+  indent:
+    - error
+    - 2
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  no-console: 0
