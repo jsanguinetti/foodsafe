@@ -3,7 +3,8 @@ import "../stylesheets/app.css";
 
 // Import libraries we need.
 import { default as Web3} from 'web3';
-import { default as contract } from 'truffle-contract'
+import { default as contract } from 'truffle-contract';
+import { txHelpers } from './transactionHelpers.js';
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -13,11 +14,11 @@ var account;
 var foodSafeABI = JSON.parse(process.env.FOODSAFE_ABI);
 var foodSafeCode = process.env.FOODSAFE_CODE;
 var foodSafeContract;
+var helper;
 
 window.App = {
   start: function() {
     var self = this;
-    
     // Get the initial account balance so it can be displayed.
     web3.eth.getAccounts(function(err, accs) {
       if (err != null) {
@@ -55,12 +56,12 @@ window.App = {
             console.log('error', error);
             console.log('deployedContract', deployedContract);
             if(deployedContract.transactionHash) {
-              web3.eth.getTransactionReceipt(
-                deployedContract.transactionHash,
-                (err, txnReceipt) => { 
+              helper.getTransactionReceiptAfterMined(deployedContract.transactionHash)
+                .then((txnReceipt) => {
+                  console.log('txnReceipt', txnReceipt);
                   document.getElementById("contractAddress").value = txnReceipt.contractAddress;
-                }
-              );
+                })
+                .catch(console.log);
             }
           }
         );
@@ -80,6 +81,6 @@ window.addEventListener('load', function() {
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }
-
+  helper = txHelpers(web3);
   App.start();
 });
