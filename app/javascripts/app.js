@@ -4,7 +4,7 @@ import "../stylesheets/app.css";
 // Import libraries we need.
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract';
-import { txHelpers } from './transactionHelpers.js';
+import TxHelper from './TxHelper.js';
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -81,6 +81,6 @@ window.addEventListener('load', function() {
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }
-  helper = txHelpers(web3);
+  helper = new TxHelper(web3);
   App.start();
 });
