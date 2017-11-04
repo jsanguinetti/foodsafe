@@ -5,6 +5,8 @@ import "../stylesheets/app.css";
 import { default as Web3} from 'web3';
 import { default as contract } from 'truffle-contract';
 import TxHelper from './TxHelper.js';
+import PromisifiedWeb3 from './PromisifiedWeb3.js';
+import ContractWrapper from './ContractWrapper.js';
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -36,36 +38,26 @@ window.App = {
       foodSafeContract = web3.eth.contract(foodSafeABI);
     });
   },
-  createContract: function() {
-    web3.eth.estimateGas(
-      {
-        data: foodSafeCode
-      },
-      (err, estimatedGas) => {
-        if (err)
-          return;
-        foodSafeContract.new(
-          "",
-          {
-            from: account,
-            data: foodSafeCode,
-            gas: estimatedGas
-          }, 
-          (error, deployedContract) => {
-            console.log('error', error);
-            console.log('deployedContract', deployedContract);
-            if(deployedContract.transactionHash) {
-              new TxHelper(web3).getTransactionReceiptAfterMined(deployedContract.transactionHash)
-                .then((txnReceipt) => {
-                  console.log('txnReceipt', txnReceipt);
-                  document.getElementById("contractAddress").value = txnReceipt.contractAddress;
-                })
-                .catch(console.log);
-            }
-          }
-        );
+  createContract: async function() {
+    const pWeb3 = new PromisifiedWeb3(web3);
+    const cWrapper = new ContractWrapper(foodSafeContract);
+    const txHelper = new TxHelper(web3);
+    try {
+      const estimatedGas = await pWeb3.estimateGas({data: foodSafeCode});
+      const deployedContract = await cWrapper.newContract({
+        from: account,
+        data: foodSafeCode,
+        gas: estimatedGas
+      });
+      console.log('deployedContract', deployedContract);
+      if(deployedContract.transactionHash) {
+        const txReceipt = await txHelper.getTransactionReceiptAfterMined(deployedContract.transactionHash);
+        console.log('txnReceipt', txReceipt);
+        document.getElementById("contractAddress").value = txReceipt.contractAddress;   
       }
-    );
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
 
