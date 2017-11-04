@@ -14,7 +14,6 @@ var account;
 var foodSafeABI = JSON.parse(process.env.FOODSAFE_ABI);
 var foodSafeCode = process.env.FOODSAFE_CODE;
 var foodSafeContract;
-var helper;
 
 window.App = {
   start: function() {
@@ -56,7 +55,7 @@ window.App = {
             console.log('error', error);
             console.log('deployedContract', deployedContract);
             if(deployedContract.transactionHash) {
-              helper.getTransactionReceiptAfterMined(deployedContract.transactionHash)
+              new TxHelper(web3).getTransactionReceiptAfterMined(deployedContract.transactionHash)
                 .then((txnReceipt) => {
                   console.log('txnReceipt', txnReceipt);
                   document.getElementById("contractAddress").value = txnReceipt.contractAddress;
@@ -81,6 +80,5 @@ window.addEventListener('load', function() {
     // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
     window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
   }
-  helper = new TxHelper(web3);
   App.start();
 });
