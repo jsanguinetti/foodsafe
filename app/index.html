@@ -3,18 +3,86 @@
 <head>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
   <script src="./app.js"></script>
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .item {
+      flex-grow: 1;
+    }
+  </style>
 </head>
-<body>
-  <h1>FoodSafe</h1>
-  <br>
-  <label for="contractAddress">
-    Contract Address:
-  </label>
-  <input 
-    type="text"
-    id="contractAddress"
-    placeholder="Scan address or create a new contract"/>
-    <br><br>
-    <button id="createContract" onclick="App.createContract()">Create New Contract</button>
-</body>
+  <body>
+    <div class='container'>
+      <h1>FoodSafe</h1>
+      <br>
+      <div class="item">
+        <label for="contractAddress">
+          Contract Address:
+        </label>
+        <input 
+          type="text"
+          id="contractAddress"
+          placeholder="Scan address or create a new contract"/>
+      </div>
+
+      <br>
+      <br>
+      <div class="item">
+        <label for="locationId">
+          Location Id:
+        </label>
+        <input 
+          type="text"
+          id="locationId"
+          placeholder="Enter the location id"/>
+      </div>
+
+      <br>
+      <br>
+      <div class="item">
+        <label for="locationName">
+          Location Name:
+        </label>
+        <input 
+          type="text"
+          id="locationName"
+          placeholder="Enter the location name"/>
+      </div>
+
+      <br>
+      <br>
+      <div class="item">
+        <label for="secret">
+          Secret:
+        </label>
+        <input 
+          type="text"
+          id="secret"
+          placeholder="Enter secret"/>
+      </div>
+
+      <br>
+      <br>
+      <div class="item">
+        <label for="passphrase">
+          Passphrase:
+        </label>
+        <input 
+          type="text"
+          id="passphrase"
+          placeholder="Enter encryption passphrase"/>
+        </div>
+      <br><br>
+      <button id="createContract" onclick="App.createContract()">Create New Contract</button>
+
+      <br><br>
+      <button id="addNewLocation" onclick="App.addNewLocation()">Add New Location</button>
+
+      <br><br>
+      <button id="getCurrentLocation" onclick="App.getCurrentLocation()">Get the current Location</button>
+    </div> 
+  </body>
 </html>

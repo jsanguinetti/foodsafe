@@ -6,6 +6,7 @@ import { default as Web3} from 'web3';
 import TxHelper from './TxHelper.js';
 import PromisifiedWeb3 from './PromisifiedWeb3.js';
 import ContractWrapper from './ContractWrapper.js';
+import { default as CryptoJS } from 'crypto-js';
 
 // The following code is simple to show off interacting with your contracts.
 // As your needs grow you will likely need to change its form and structure.
@@ -56,6 +57,41 @@ window.App = {
     } catch (err) {
       console.log(err);
     }
+  },
+  addNewLocation: async () => {
+    const contractAddress = document.getElementById('contractAddress').value;
+    const locationId = document.getElementById('locationId').value;
+    const locationName = document.getElementById('locationName').value;
+    const locationSecret = document.getElementById('secret').value;
+    const passphrase = document.getElementById('passphrase').value;
+    const encryptedSecret = CryptoJS.AES.encrypt(locationSecret, passphrase).toString();
+    
+    const cWrapper = new ContractWrapper(foodSafeContract);
+    try {
+      const deployedFoodSafe = await cWrapper.at(contractAddress);
+      await deployedFoodSafe.addNewLocation(locationId, locationName, encryptedSecret)
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getCurrentLocation: async () => {
+    const contractAddress = document.getElementById('contractAddress').value;
+    const passphrase = document.getElementById('passphrase').value;
+    
+    const cWrapper = new ContractWrapper(foodSafeContract);
+    try {
+      const deployedFoodSafe = await cWrapper.at(contractAddress);
+      const currentTrailCount = await deployedFoodSafe.getTrailCount();
+      const returnValues = await deployedFoodSafe.getLocation(currentTrailCount - 1);
+      document.getElementById('locationId').value = returnValues[1];
+      document.getElementById('locationName').value = returnValues[0];
+      document.getElementById('secret').value = CryptoJS.AES
+        .decrypt(returnValues[4], passphrase)
+        .toString(CryptoJS.enc.Utf8);
+    } catch (err) {
+      console.log(err);
+    }
+
   }
 };
 
